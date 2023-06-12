@@ -1,0 +1,69 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 TimesNewRomanPSMT;\f1\froman\fcharset0 Times-Roman;\f2\froman\fcharset0 Times-Bold;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww19900\viewh16380\viewkind0
+\deftab720
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf2 \expnd0\expndtw0\kerning0
+#pragma GCC push_options \
+#pragma GCC optimize \
+("Os") 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 #include <core.h> // Required by cpu#include\uc0\u8232 <cpu.h> #include <TimerOne.h>\u8232 #include <L3G.h> // Required by Z1:DRIVE #include \
+<LSM303.h> // Required by Z1:DRIVE#include <Wire.h> \
+// Required by Z1:DRIVE #include <Servo.h>\
+ // Required by Z1:DRIVE#include <Zumo.h> 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 #pragma GCC pop_options 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 // Peripheral\uc0\u8232 ConstructorsCPU &cpu =\u8232 Cpu;\u8232 TimerOne &timer1 = Timer1;\u8232 DRIVE Z1_DRIVE = DRIVE (8, 10, 7, 9);\u8232 LINESENSOR Z1_LINESENSOR = LINESENSOR (4, A3, 11, A0, A2, 5, 2);\
+COMPASS Z1_COMPASS = COMPASS ();\uc0\u8232 GYRO Z1_GYRO = GYRO (); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void peripheral_setup () \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 Z1_DRIVE.begin (); Z1_LINESENSOR.begin (); Z1_COMPASS.begin (); Z1_GYRO.begin (); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void peripheral_loop() \{ \
+\}\uc0\u8232 //---CONFIG_END--- // Flowchart Variables long var_linePosition;long var_error; 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 long var_lastError;\uc0\u8232 long var_speedDifference;long var_leftSpeed;\u8232 long var_rightSpeed;long var_maxSpeed; float\u8232 var_magX; float\u8232 var_magY; float\u8232 var_magZ;\u8232 // Flowchart Routinesvoid chart_SETUP() \{ var_lastError=0,var_maxSpeed=255; \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void chart_LOOP() \{ var_linePosition=Z1_LINESENSOR.readLinePos(); var_error=var_linePosition-2500; var_speedDifference=var_error/4+6*(var_error-\uc0\u8232 var_lastError); var_lastError=var_error; var_leftSpeed=var_maxSpeed+var_speedDifference,var_rightSpeed=var_maxSpeedvar_speedDifference; 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 chart_boundSpeeds(); Z1_DRIVE.drive(1,1,var_leftSpeed); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 Z1_DRIVE.drive(2,1,var_rightSpeed); \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void chart_boundSpeeds() \{ if(var_leftSpeed<0) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 var_leftSpeed=0; \}\uc0\u8232 else \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 if(var_rightSpeed<0) \{\uc0\u8232 var_rightSpeed=0;\u8232 \} else \{ if(var_leftSpeed>var_maxSpeed) \{ var_leftSpeed=var_maxSpeed;\u8232 \} else \{ if(var_rightSpeed>var_maxSpeed) \{ var_rightSpeed=var_maxSpeed;\u8232 \}\u8232 \}\u8232 \}\u8232 \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 // Entry Points and Interrupt Handlers\uc0\u8232 void setup () \{ peripheral_setup(); chart_SETUP(); \}void loop () \{ peripheral_loop(); chart_LOOP(); \} 
+\f2\b\fs32 Output 
+\f1\b0\fs24 \
+}

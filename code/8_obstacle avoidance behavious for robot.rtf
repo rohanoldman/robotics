@@ -1,0 +1,136 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 TimesNewRomanPSMT;\f1\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww19900\viewh16380\viewkind0
+\deftab720
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs29\fsmilli14667 \cf2 \expnd0\expndtw0\kerning0
+//---CONFIG_BEGIN---\
+ #pragma GCC push_options \
+#pragma GCC optimize ("Os") 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 #include <core.h> // Required by cpu#include\uc0\u8232 <cpu.h> #include <TimerOne.h>\u8232 #include <Servo.h> // Required by T1: DRIVE#include <Turtle.h> 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 #pragma GCC pop_options 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 // Peripheral\uc0\u8232 ConstructorsCPU &cpu =\u8232 Cpu;\u8232 TimerOne &timer1 = Timer1;\u8232 TurtleDrive T1_DRIVE = TurtleDrive (2, 4, 3, 6, 7, 5);\u8232 TurtleSonarHead T1_SH = TurtleSonarHead (8, 9, 10); TurtleLineHunter T1_LH = TurtleLineHunter (11, 12, A0); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void peripheral_setup () \{ T1_DRIVE.begin (); T1_SH.begin (); T1_LH.begin (); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void peripheral_loop() \{ \}\uc0\u8232 //---CONFIG_END--- // \
+Flowchart Variableslong var_speed;\
+ long var_dir; \
+long var_count; long var_range; \
+long var_fast; long 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 var_slow; \
+long var_tstart;long var_tstop; \
+\
+// Flowchart Routinesvoid chart_SETUP() \{ var_speed=180,var_range=10,var_dir=0; 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_SH.setAngle(0); T1_SH.setRange(25); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.forwards(var_speed); \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void chart_LOOP() \{ if(!(T1_LH(0,0,0))) \{ if(T1_LH(1,1,1)) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 chart_Correct();\uc0\u8232 \} else \{ if(T1_LH(0,1,1)) 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \{\uc0\u8232 T1_DRIVE.drive(1,1,5*var_speed/4); T1_DRIVE.drive(2,1,var_speed/2); var_dir=10; chart_Avoid();\u8232 \} else \{ if(T1_LH(0,0,1)) 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \{ T1_DRIVE.drive(1,1,5*var_speed/4); T1_DRIVE.drive(2,0,var_speed/5); var_dir=30; 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} else \{ if(T1_LH(1,1,0)) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.drive(2,1,5*var_speed/4); T1_DRIVE.drive(1,1,var_speed/2); var_dir=- 10;\uc0\u8232 chart_Avoid(); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} else \{ if(T1_LH(1,0,0)) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.drive(2,1,5*var_speed/4); T1_DRIVE.drive(1,0,var_speed/5); var_dir=- 30; 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} else \{ if(T1_LH(-1,1,-1)) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.forwards(var_speed); var_dir=0;\uc0\u8232 chart_Avoid(); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void chart_Correct() \{ var_count=0; 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 l3:;\uc0\u8232 if(var_dir>0) \{ T1_DRIVE.drive(2,1,var_speed); T1_DRIVE.drive(1,0,var_speed/3); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} else \{ if(var_dir<0) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.drive(1,1,var_speed); T1_DRIVE.drive(2,0,var_speed/3); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \}\uc0\u8232 \}\u8232 delay(1); var_count=var_count+1; if(var_count<1000) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 if (T1_LH(1,1,1)) goto l3; \} else \{\uc0\u8232 T1_DRIVE.stop(); var_dir=0; 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 void chart_Avoid() \{ if(T1_SH(var_range,0)) \{ T1_DRIVE.backwards(2*var_speed/3);delay(250); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.turn(80); do \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 delay(5);\uc0\u8232 \} while ((!(T1_SH(1.5*var_range,0))) == false);T1_DRIVE.stop(); delay(500);\u8232 T1_DRIVE.turn(80);\u8232 var_tstart=cpu.millis();\u8232 while (!(T1_SH(1.5*var_range,0))) \{\u8232 \}\u8232 var_tstop=cpu.millis(); var_count=(var_tstop- var_tstart)/10;T1_DRIVE.stop();\u8232 delay(500);\u8232 T1_DRIVE.turn(-80);\u8232 while (var_count>0) \{ 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 var_count=var_count-1; delay(5);\uc0\u8232 \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.backwards(2*var_speed/3);delay(300); 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 T1_DRIVE.forwards(var_speed/2); \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 \} 
+\f1\fs24 \
+
+\f0\fs29\fsmilli14667 // Entry Points and Interrupt Handlers\uc0\u8232 void setup () \{ peripheral_setup(); chart_SETUP(); \}void loop () \{ peripheral_loop(); chart_LOOP(); 
+\f1\fs24 \
+\
+}
